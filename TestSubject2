@@ -1,0 +1,41 @@
+package threads;
+
+public class TestSubject2 {
+	public static void main(String[] args) {
+		
+		Thread downloadThread = new Thread(new Demo());
+		downloadThread.start();
+		
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e ) {
+			e.printStackTrace();
+		}
+		System.out.println("User decides to cancel the downloads..");
+		downloadThread.interrupt();
+	}
+}
+
+class Demo implements Runnable {
+	@Override
+	public void run() {
+		System.out.println("Download started...");
+		
+		for (int i = 0; i < 10; i++) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				System.out.println("Dowload was interrupted.");
+				Thread.currentThread().interrupt();
+			}
+			if (Thread.currentThread().isInterrupted()) {
+				System.out.println("Dowload stopped by user.");
+				return;
+			}
+			System.out.println("Downloaded " + i * 10 + "%");
+			
+		}
+		System.out.println("Dowload completed successfully.");
+	}
+}
+
